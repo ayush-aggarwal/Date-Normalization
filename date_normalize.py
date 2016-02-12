@@ -1,0 +1,185 @@
+def getText():
+	global ch
+	print "Please Enter The Input Method:- "
+	print "1. String"
+	print "2. MySQL"
+	print "3. MongoDB"
+	ch=input("Enter:- ")
+	if ch==1:
+		t=raw_input("Enter Text:- ")
+		return [t]
+months={
+	"january":"01",
+	"jan":"01",
+	"febuary":"02",
+	"feb":"02",
+	"march":"03",
+	"mar":"03",
+	"april":"04",
+	"apr":"04",
+	"may":"05",
+	"june":"06",
+	"jun":"06",
+	"july":"07",
+	"jul":"07",
+	"aug":"08",
+	"august":"08",
+	"sep":"09",
+	"sept":"09",
+	"september":"09",
+	"oct":"10",
+	"october":"10",
+	"nov":"11",
+	"november":"11",
+	"dec":"12",
+	"december":"12"
+}
+import MySQLdb
+import pymongo
+import re
+from datetime import date
+today = date.today()
+for text in getText():
+	maintext=text
+	dates={}
+	try:
+		d={}
+		for m in re.finditer(r'(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?)(\/|-|,|\s|\.)([0-2][1-9]|3[0-1])(th|rd|st|nd|)(\/|-|,|\s|\.)((19[7-9]\d|20\d{2})|\d{2})',text,re.IGNORECASE):
+			t=m.group(0)
+			d[t]=[text.index(t),text.index(t)+len(t)]
+		for i in d:
+			a=i.replace(".","/").replace(" ","/").replace("-","/").replace(",","/").replace("st","").replace("th","").replace("rd","").replace("nd","")
+			tem=a.split("/")
+			b=tem[1]
+			tem[1]=months[str(tem[0]).lower()]
+			tem[0]=b
+			if len(tem[2])!=4 and len(tem[2])==2:
+				y=str(today.year)[2:]
+				if int(y)>=int(tem[2]):
+					tem[2]="20"+tem[2]
+				else:
+					tem[2]="19"+tem[2]
+			a="/".join(tem)
+			dates[i]=[a,d[i][0],d[i][1]]
+			maintext=maintext.replace(i,a)
+			text=text.replace(i,"#")
+	except Exception as e:
+		print e
+		pass
+	try:
+		d={}
+		for m in re.finditer(r'([12][0-9]{3})(\/|-|,|\s|\.)(0[1-9]|1[0-2])(\/|-|,|\s|\.)([0-2][1-9]|3[0-1])|([12][0-9]{3})(\/|-|,|\s|\.)(0[1-9]|1[0-2])(\/|-|,|\s|\.)([1-9])|([12][0-9]{3})(\/|-|,|\s|\.)([1-9])(\/|-|,|\s|\.)([0-2][1-9]|3[0-1])|([12][0-9]{3})(\/|-|,|\s|\.)([1-9])(\/|-|,|\s|\.)([1-9])',text):						#reverse date format
+			t=m.group(0)
+			d[t]=[text.index(t),text.index(t)+len(t)]
+		for i in d:
+			a=i.replace(".","/").replace(" ","/").replace("-","/").replace(",","/")
+			tem=a.split("/")
+			if len(tem[1])==1:
+				tem[1]="0"+str(tem[1])
+			if len(tem[2])==1:
+				tem[2]="0"+str(tem[2])
+			tem.reverse()
+			a="/".join(tem)
+			dates[i]=[a,d[i][0],d[i][1]]
+			text=text.replace(i,"#")
+			maintext=maintext.replace(i,a)
+		#print text
+		#print dates
+	except Exception as e:
+		print e
+		pass
+	try:
+		d={}
+		for m in re.finditer(r'(?:(?:31(\/|-|,|\s|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|,|\s|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})|(?:29(\/|-|,|\s|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))|(?:0?[1-9]|1\d|2[0-8])(\/|-|,|\s|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})',text):     #regex for num format
+			t=m.group(0)
+			d[t]=[text.index(t),text.index(t)+len(t)]
+		for i in d:
+			a=i.replace(".","/").replace(" ","/").replace("-","/").replace(",","/")
+			tem=a.split("/")
+			if len(tem[0])==1:
+				tem[0]="0"+str(tem[0])
+			if len(tem[1])==1:
+				tem[1]="0"+str(tem[1])
+			if len(tem[2])!=4 and len(tem[2])==2:
+				y=str(today.year)[2:]
+				if int(y)>=int(tem[2]):
+					tem[2]="20"+tem[2]
+				else:
+					tem[2]="19"+tem[2]
+			a="/".join(tem)
+			dates[i]=[a,d[i][0],d[i][1]]
+			maintext=maintext.replace(i,a)
+			text=text.replace(i,"#")
+		#print maintext
+		#print dates
+		#print text
+	except Exception as e:
+		print e	
+		pass
+	try:
+		d={}
+		for m in re.finditer(r'([0-2][0-9]|3[0-1])(\/|-|,|\s|\.)(0[1-9]|1[0-2])|(0[1-9]|1[0-2])(\/|-|,|\s|\.)([0-2][0-9]|3[0-1])',text): #regex for mmdd date format
+			t=m.group(0)
+			d[t]=[text.index(t),text.index(t)+len(t)]
+		for i in d:
+			a=i.replace(".","/").replace(" ","/").replace("-","/").replace(",","/")
+			a=a+"/"+str(today.year)
+			dates[i]=[a,d[i][0],d[i][1]]
+			maintext=maintext.replace(i,a)
+			text=text.replace(i,"#")
+		#print maintext
+		#print dates
+		#print text
+	except Exception as e:
+		print e
+		pass	
+	try:
+		d={}
+		for m in re.finditer(r'(\b\d{1,2}\D{0,3})?\b((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?))\D?(\d{1,2}\D?)?\D?((19[7-9]\d|20\d{2})|\d{2})',text,re.IGNORECASE): #regex for word month date
+			t=m.group(0)
+			d[t]=[text.index(t),text.index(t)+len(t)]
+		for i in d:
+			a=i.replace(".","/").replace(" ","/").replace("-","/").replace(",","/").replace("st","").replace("th","").replace("rd","").replace("nd","")
+			tem=a.split("/")
+			if len(tem[0])==1:
+				tem[0]="0"+str(tem[0])
+			tem[1]=months[str(tem[1]).lower()]
+			if len(tem[2])!=4 and len(tem[2])==2:
+				y=str(today.year)[2:]
+				if int(y)>=int(tem[2]):
+					tem[2]="20"+tem[2]
+				else:
+					tem[2]="19"+tem[2]
+			a="/".join(tem)
+			dates[i]=[a,d[i][0],d[i][1]]
+			maintext=maintext.replace(i,a)
+			text=text.replace(i,"#")
+		#print maintext
+		#print dates
+		#print text
+	except Exception as e:
+		print e
+		pass
+	try:
+		d={}
+		for m in re.finditer(r'([0-2][1-9]|3[0-1])(\/|-|,|\s|\.)((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?))|([0-2][1-9]|3[0-1])(th|rd|st|nd)(\/|-|,|\s|\.)((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?))|([1-9])(\/|-|,|\s|\.)((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?))|([1-9])(th|rd|st|nd)(\/|-|,|\s|\.)((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?))',text,re.IGNORECASE):
+			t=m.group(0)
+			d[t]=[text.index(t),text.index(t)+len(t)]
+		for i in d:
+			a=i.replace(".","/").replace(" ","/").replace("-","/").replace(",","/").replace("st","").replace("th","").replace("rd","").replace("nd","")
+			tem=a.split("/")
+			if len(tem[0])==1:
+				tem[0]="0"+str(tem[0])
+			tem[1]=months[str(tem[1]).lower()]
+			tem.append(str(today.year))
+			a="/".join(tem)
+			dates[i]=[a,d[i][0],d[i][1]]
+			maintext=maintext.replace(i,a)
+			text=text.replace(i,"#")
+	except Exception as e:
+		print e
+		pass
+	if ch==1:
+		print maintext
+		for g in dates:
+			print str(g)+"\t\t\t"+str(dates[g])
