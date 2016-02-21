@@ -216,6 +216,28 @@ for text in getText():
 	except Exception as e:
 		print e
 		pass
+	try:
+		d={}
+		for m in re.finditer(r'(\s|\.|\.\s)[12][0-9]{3}(\s|,|\.)',text):
+			t=m.group(0)
+			d[t]=[text.index(t),text.index(t)+len(t)]
+			for i in d:
+				a=i.replace(". ","").replace(".","").replace(",","").replace(" ","")
+				a="01/01/"+str(a)
+				dates[i]=[a,d[i][0],d[i][1]]
+				if ". " in i:
+					a=". "+a
+				if "." in i:
+					a=a+"."
+				if " " in i:
+					a=" "+a+" "
+				if "," in i:
+					a=a+","
+				maintext=maintext.replace(i,a)
+				text=text.replace(i,"#")
+	except Exception as e:
+		print e
+		pass
 	if ch==1:
 		print maintext
 		print "\t\t\tDates Identified"
