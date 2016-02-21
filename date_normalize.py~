@@ -54,11 +54,11 @@ for text in getText():
 	dates={}
 	try:
 		d={}
-		for m in re.finditer(r'(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?)(\/|-|,|\s|\.|,\s)([0-2][1-9]|3[0-1])(th|rd|st|nd|)(\/|-|,|\s|\.|,\s)((19[7-9]\d|20\d{2})|\d{2})',text,re.IGNORECASE):
+		for m in re.finditer(r'(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?)(\/|-|,|\s|\.|,\s)([0-2][0-9]|3[0-1])(th|rd|st|nd|)(\/|-|,|\s|\.|,\s)((19[7-9]\d|20\d{2})|\d{2})',text,re.IGNORECASE):
 			t=m.group(0)
 			d[t]=[text.index(t),text.index(t)+len(t)]
 		for i in d:
-			a=i.replace(".","/").replace(" ","/").replace("-","/").replace(",","/").replace("August","Aug").replace("august","aug").replace("st","").replace("th","").replace("rd","").replace("nd","")
+			a=i.replace(", ","/").replace(".","/").replace(" ","/").replace("-","/").replace(",","/").replace("August","Aug").replace("august","aug").replace("st","").replace("th","").replace("rd","").replace("nd","")
 			tem=a.split("/")
 			b=tem[1]
 			tem[1]=months[str(tem[0]).lower()]
@@ -199,7 +199,7 @@ for text in getText():
 		pass
 	try:
 		d={}
-		for m in re.finditer(r'([0-2][1-9]|3[0-1])(\/|-|,|\s|\.)((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?))|([0-2][1-9]|3[0-1])(th|rd|st|nd)(\/|-|,|\s|\.)((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?))|([1-9])(\/|-|,|\s|\.)((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?))|([1-9])(th|rd|st|nd)(\/|-|,|\s|\.)((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?))',text,re.IGNORECASE):
+		for m in re.finditer(r'([0-2][0-9]|3[0-1])(\/|-|,|\s|\.)((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?))|([0-2][0-9]|3[0-1])(th|rd|st|nd)(\/|-|,|\s|\.)((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?))|([1-9])(\/|-|,|\s|\.)((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?))|([1-9])(th|rd|st|nd)(\/|-|,|\s|\.)((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?))',text,re.IGNORECASE):
 			t=m.group(0)
 			d[t]=[text.index(t),text.index(t)+len(t)]
 		for i in d:
