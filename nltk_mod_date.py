@@ -1,0 +1,18 @@
+from nltk import word_tokenize, pos_tag,tokenize
+
+def determine_tense(sentence):
+    text = word_tokenize(sentence)
+    tagged = pos_tag(text)
+    tense = {}
+    tense["future"] = len([word for word in tagged if word[1] == "MD"])
+    tense["present"] = len([word for word in tagged if word[1] in ["VBP", "VBZ","VBG"]])
+    tense["past"] = len([word for word in tagged if word[1] in ["VBD", "VBN"]]) 
+    m=max(tense.values())
+    for i in tense.items():
+    	if i[1]==m:
+    		ft=str(i[0])
+    		break
+    return ft
+def getSentences(data):
+	l=tokenize.sent_tokenize(data)
+	return l

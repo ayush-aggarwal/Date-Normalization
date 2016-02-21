@@ -47,6 +47,7 @@ months={
 import re
 from datetime import date
 from bs4 import BeautifulSoup as bs
+import nltk_mod_date
 today = date.today()
 for text in getText():
 	maintext=text
@@ -63,11 +64,20 @@ for text in getText():
 			tem[1]=months[str(tem[0]).lower()]
 			tem[0]=b
 			if len(tem[2])!=4 and len(tem[2])==2:
-				y=str(today.year)[2:]
-				if int(y)>=int(tem[2]):
+				sentences=nltk_mod_date.getSentences(text)
+				for z in sentences:
+					if i in z:
+						res=i
+						break
+				tense=nltk_mod_date.determine_tense(res)
+				if tense=="future" or tense=="present":
 					tem[2]="20"+tem[2]
 				else:
-					tem[2]="19"+tem[2]
+					tense=nltk_mod_date.determine_tense(text)
+					if tense=="past":
+						tem[2]="19"+tem[2]
+					else:
+						tem[2]="20"+tem[2]
 			a="/".join(tem)
 			dates[i]=[a,d[i][0],d[i][1]]
 			maintext=maintext.replace(i,a)
@@ -110,11 +120,20 @@ for text in getText():
 			if len(tem[1])==1:
 				tem[1]="0"+str(tem[1])
 			if len(tem[2])!=4 and len(tem[2])==2:
-				y=str(today.year)[2:]
-				if int(y)>=int(tem[2]):
+				sentences=nltk_mod_date.getSentences(text)
+				for z in sentences:
+					if i in z:
+						res=i
+						break
+				tense=nltk_mod_date.determine_tense(res)
+				if tense=="future" or tense=="present":
 					tem[2]="20"+tem[2]
 				else:
-					tem[2]="19"+tem[2]
+					tense=nltk_mod_date.determine_tense(text)
+					if tense=="past":
+						tem[2]="19"+tem[2]
+					else:
+						tem[2]="20"+tem[2]
 			a="/".join(tem)
 			dates[i]=[a,d[i][0],d[i][1]]
 			maintext=maintext.replace(i,a)
@@ -154,11 +173,20 @@ for text in getText():
 				tem[0]="0"+str(tem[0])
 			tem[1]=months[str(tem[1]).lower()]
 			if len(tem[2])!=4 and len(tem[2])==2:
-				y=str(today.year)[2:]
-				if int(y)>=int(tem[2]):
+				sentences=nltk_mod_date.getSentences(text)
+				for z in sentences:
+					if i in z:
+						res=i
+						break
+				tense=nltk_mod_date.determine_tense(res)
+				if tense=="future" or tense=="present":
 					tem[2]="20"+tem[2]
 				else:
-					tem[2]="19"+tem[2]
+					tense=nltk_mod_date.determine_tense(text)
+					if tense=="past":
+						tem[2]="19"+tem[2]
+					else:
+						tem[2]="20"+tem[2]
 			a="/".join(tem)
 			dates[i]=[a,d[i][0],d[i][1]]
 			maintext=maintext.replace(i,a)
